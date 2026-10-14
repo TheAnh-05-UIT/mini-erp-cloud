@@ -1,0 +1,44 @@
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.iml
+
+# Java and Spring Boot
+*.class
+*.log
+target/
+.gradle/
+build/
+
+# Node.js and frontend tooling
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Environment and local secrets
+.env
+.env.*
+!.env.example
+
+# Terraform local state and overrides
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+terraform.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ansible runtime files
+*.retry
+
+AGENTS.md
+README.md
+CLAUDE.md
+docs/*
+docs
