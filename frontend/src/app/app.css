@@ -1,0 +1,42 @@
+:root {
+  color: #182230;
+  background: #f7f9fc;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border: 1px solid #d8e0ea;
+  border-radius: 0.5rem;
+  background: #fff;
+}
+
+dl {
+  display: grid;
+  gap: 0.75rem;
+}
+
+dl div {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: 1rem;
+}
+
+dt {
+  font-weight: 700;
+}
+
+dd {
+  margin: 0;
+}
