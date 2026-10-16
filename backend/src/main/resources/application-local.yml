@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: ${MINI_ERP_DEV_DB_URL:jdbc:postgresql://127.0.0.1:5433/mini_erp_dev}
+    username: ${MINI_ERP_DEV_DB_USERNAME:mini_erp_dev_app}
+    password: ${MINI_ERP_DEV_DB_PASSWORD}
