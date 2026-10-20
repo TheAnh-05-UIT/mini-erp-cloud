@@ -1,5 +1,13 @@
 spring:
   datasource:
+    # Tests are isolated to mini_erp_test and never use the development database. / Test tách biệt trong mini_erp_test, không dùng development database.
     url: ${MINI_ERP_TEST_DB_URL:jdbc:postgresql://127.0.0.1:5433/mini_erp_test}
     username: ${MINI_ERP_TEST_DB_USERNAME:mini_erp_test_app}
     password: ${MINI_ERP_TEST_DB_PASSWORD}
+
+server:
+  servlet:
+    session:
+      cookie:
+        # Test profile uses local HTTP only. / Test profile chỉ dùng Local HTTP.
+        secure: false

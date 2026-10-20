@@ -1,12 +1,17 @@
 spring:
   application:
     name: mini-erp-backend
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
   profiles:
     default: local
   jpa:
     hibernate:
+      # Flyway owns schema changes; Hibernate must not alter the database. / Flyway quản lý schema; Hibernate không được tự sửa database.
       ddl-auto: none
   flyway:
+    # Versioned migrations are the single schema history. / Migration có version là lịch sử schema duy nhất.
     enabled: true
     locations: classpath:db/migration
 
@@ -14,3 +19,11 @@ server:
   error:
     include-message: never
     include-stacktrace: never
+  servlet:
+    session:
+      # Idle timeout only; absolute-session enforcement is implemented separately. / Chỉ timeout idle; absolute session được xử lý riêng.
+      timeout: 30m
+      cookie:
+        http-only: true
+        same-site: lax
+        secure: true

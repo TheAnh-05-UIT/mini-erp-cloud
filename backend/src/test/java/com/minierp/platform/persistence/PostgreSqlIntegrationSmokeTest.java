@@ -15,6 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
+/**
+ * Verifies the isolated PostgreSQL test database and Flyway baseline are usable. / Kiểm tra PostgreSQL test database độc lập và Flyway baseline có thể sử dụng.
+ */
 @SpringBootTest
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = TestDatabaseSafetyInitializer.class)
@@ -27,7 +30,7 @@ class PostgreSqlIntegrationSmokeTest {
     private Flyway flyway;
 
     @Test
-    void connectsToIsolatedPostgreSqlTestDatabaseAndInitializesFlywayHistory() throws SQLException {
+    void connectsToIsolatedPostgreSqlTestDatabaseAndAppliesAuthSecurityMigration() throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             assertThat(connection.getMetaData().getDatabaseProductName()).isEqualTo("PostgreSQL");
             assertThat(connection.getCatalog()).isEqualTo("mini_erp_test");
@@ -39,6 +42,8 @@ class PostgreSqlIntegrationSmokeTest {
             }
         }
 
-        assertThat(flyway.info().applied()).isEmpty();
+        assertThat(flyway.info().applied())
+                .extracting(migrationInfo -> migrationInfo.getVersion().getVersion())
+                .contains("1");
     }
 }
