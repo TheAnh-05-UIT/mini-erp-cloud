@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 
-import com.minierp.platform.persistence.TestDatabaseSafetyInitializer;
+import com.minierp.platform.persistence.IsolatedBootstrapTestDatabaseSafetyInitializer;
 import com.minierp.platform.security.persistence.Role;
 import com.minierp.platform.security.persistence.RoleCode;
 import com.minierp.platform.security.persistence.RoleRepository;
@@ -28,8 +28,8 @@ import com.minierp.platform.security.persistence.UserAccountRepository;
  * Verifies one-time Admin bootstrap behavior with the isolated PostgreSQL test database. / Kiểm tra bootstrap Admin một lần với PostgreSQL test database độc lập.
  */
 @SpringBootTest
-@ActiveProfiles("test")
-@ContextConfiguration(initializers = TestDatabaseSafetyInitializer.class)
+@ActiveProfiles("isolated-test")
+@ContextConfiguration(initializers = IsolatedBootstrapTestDatabaseSafetyInitializer.class)
 @Transactional
 class AdminBootstrapServiceIntegrationTest {
 

@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: ${MINI_ERP_ISOLATED_TEST_DB_URL}
+    username: ${MINI_ERP_ISOLATED_TEST_DB_USERNAME}
+    password: ${MINI_ERP_ISOLATED_TEST_DB_PASSWORD}
+
+server:
+  servlet:
+    session:
+      cookie:
+        secure: false

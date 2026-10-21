@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: ${MINI_ERP_CONCURRENCY_DB_URL}
+    username: ${MINI_ERP_CONCURRENCY_DB_USERNAME}
+    password: ${MINI_ERP_CONCURRENCY_DB_PASSWORD}

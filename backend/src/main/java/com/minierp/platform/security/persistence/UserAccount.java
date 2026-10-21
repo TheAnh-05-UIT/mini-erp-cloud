@@ -99,6 +99,16 @@ public class UserAccount {
         return Set.copyOf(roleAssignments);
     }
 
+    /** Changes only the approved profile field. / Chỉ thay đổi trường hồ sơ đã được phê duyệt. */
+    public void updateDisplayName(String value) {
+        displayName = requireNonBlank(value, "displayName");
+    }
+
+    /** Changes account lifecycle state without deleting history. / Đổi trạng thái tài khoản mà không xóa lịch sử. */
+    public void setActive(boolean value) {
+        active = value;
+    }
+
     @PrePersist
     void initializeTimestamps() {
         Instant now = Instant.now();
