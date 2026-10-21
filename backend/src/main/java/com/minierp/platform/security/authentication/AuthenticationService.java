@@ -46,6 +46,9 @@ public class AuthenticationService {
 
         try {
             securityAuditRecorder.recordSuccessfulLogin(user);
+        } catch (SecurityAuditPersistenceException exception) {
+            // The HTTP layer maps this fail-closed audit outage to a safe 503 response.
+            throw exception;
         } catch (RuntimeException exception) {
             // Successful authentication is fail-closed when its required audit fails.
             throw new AuthenticationFailedException();

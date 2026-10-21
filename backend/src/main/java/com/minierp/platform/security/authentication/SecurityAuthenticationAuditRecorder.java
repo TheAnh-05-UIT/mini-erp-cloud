@@ -1,5 +1,7 @@
 package com.minierp.platform.security.authentication;
 
+import java.util.UUID;
+
 import com.minierp.platform.security.persistence.UserAccount;
 
 /**
@@ -10,4 +12,6 @@ public interface SecurityAuthenticationAuditRecorder {
     void recordSuccessfulLogin(UserAccount user);
 
     void recordFailedLogin(String normalizedUsername);
+
+    void recordLogout(UUID userId);
 }

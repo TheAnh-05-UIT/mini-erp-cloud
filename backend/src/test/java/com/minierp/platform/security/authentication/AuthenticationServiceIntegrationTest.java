@@ -39,6 +39,9 @@ class AuthenticationServiceIntegrationTest {
     private AuthenticationService authenticationService;
 
     @Autowired
+    private SecurityAuthenticationAuditRecorder securityAuthenticationAuditRecorder;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -79,5 +82,27 @@ class AuthenticationServiceIntegrationTest {
         assertThat(principal.authorities()).containsExactly(new SimpleGrantedAuthority("ROLE_SALES_STAFF"));
         assertThat(securityAuditRecordRepository.countByEventTypeAndOutcome("LOGIN", SecurityAuditOutcome.SUCCESS))
                 .isEqualTo(auditCountBefore + 1);
+    }
+
+    @Test
+    void persistsLogoutAuditWithNoSessionMetadata() {
+        UUID userId = UUID.randomUUID();
+        long auditCountBefore = securityAuditRecordRepository.countByEventTypeAndOutcome(
+                "LOGOUT", SecurityAuditOutcome.SUCCESS);
+
+        securityAuthenticationAuditRecorder.recordLogout(userId);
+        entityManager.flush();
+
+        assertThat(securityAuditRecordRepository.countByEventTypeAndOutcome("LOGOUT", SecurityAuditOutcome.SUCCESS))
+                .isEqualTo(auditCountBefore + 1);
+        Object metadata = entityManager.createNativeQuery("""
+                select metadata
+                from security_audit_records
+                where event_type = 'LOGOUT'
+                  and target_reference = :targetReference
+                """)
+                .setParameter("targetReference", userId.toString())
+                .getSingleResult();
+        assertThat(metadata).isNull();
     }
 }

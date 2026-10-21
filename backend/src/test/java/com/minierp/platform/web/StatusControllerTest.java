@@ -8,9 +8,13 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.minierp.platform.security.SecurityConfiguration;
+import com.minierp.platform.security.session.SecurityContextFreshnessService;
+import com.minierp.platform.security.session.SessionLifecycleService;
+import com.minierp.platform.security.web.SecurityApiErrorWriter;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -23,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Verifies the public status route while preserving the default-deny API boundary. / Kiểm tra status route công khai nhưng vẫn giữ ranh giới API mặc định từ chối.
  */
 @WebMvcTest(StatusController.class)
-@Import(SecurityConfiguration.class)
+@Import({SecurityConfiguration.class, SecurityApiErrorWriter.class, SessionLifecycleService.class})
 class StatusControllerTest {
 
     @Autowired
@@ -31,6 +35,9 @@ class StatusControllerTest {
 
     @Autowired
     private ApplicationContext applicationContext;
+
+    @MockitoBean
+    private SecurityContextFreshnessService securityContextFreshnessService;
 
     @Test
     void returnsSafeStatus() throws Exception {

@@ -138,8 +138,8 @@ class AuthenticationServiceTest {
                 .when(securityAuditRecorder).recordSuccessfulLogin(user);
 
         assertThatThrownBy(() -> authenticationService.authenticate("admin", "correct-password"))
-                .isInstanceOf(AuthenticationFailedException.class)
-                .hasMessage("Authentication failed");
+                .isInstanceOf(SecurityAuditPersistenceException.class)
+                .hasMessage("Security audit persistence failed");
     }
 
     @Test

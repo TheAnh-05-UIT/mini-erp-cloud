@@ -27,3 +27,11 @@ server:
         http-only: true
         same-site: lax
         secure: true
+
+mini-erp:
+  security:
+    session:
+      # The issued timestamp is fixed at login; it is not extended by requests. / Mốc issued cố định khi login, không gia hạn bởi request.
+      idle-timeout: 30m
+      absolute-timeout: 8h
+      maximum-concurrent-sessions: 2

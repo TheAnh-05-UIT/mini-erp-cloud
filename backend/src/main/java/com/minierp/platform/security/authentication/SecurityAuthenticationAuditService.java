@@ -23,6 +23,7 @@ class SecurityAuthenticationAuditService implements SecurityAuthenticationAuditR
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityAuthenticationAuditService.class);
     private static final String LOGIN_EVENT_TYPE = "LOGIN";
+    private static final String LOGOUT_EVENT_TYPE = "LOGOUT";
 
     private final SecurityAuditRecordRepository securityAuditRecordRepository;
 
@@ -71,6 +72,27 @@ class SecurityAuthenticationAuditService implements SecurityAuthenticationAuditR
                     Map.of("authentication", "password")));
         } catch (DataAccessException exception) {
             LOGGER.warn("Security audit persistence failed for a denied authentication attempt");
+        }
+    }
+
+    /**
+     * Logout remains effective even when its post-invalidation audit cannot be
+     * stored. The fallback log contains no user identifier or session data.
+     */
+    @Override
+    public void recordLogout(UUID userId) {
+        try {
+            securityAuditRecordRepository.saveAndFlush(SecurityAuditRecord.create(
+                    UUID.randomUUID(),
+                    null,
+                    null,
+                    LOGOUT_EVENT_TYPE,
+                    SecurityAuditOutcome.SUCCESS,
+                    userId.toString(),
+                    null,
+                    null));
+        } catch (DataAccessException exception) {
+            LOGGER.warn("Security audit persistence failed after session invalidation");
         }
     }
 }
