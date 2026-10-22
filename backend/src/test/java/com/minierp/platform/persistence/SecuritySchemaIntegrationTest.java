@@ -41,8 +41,8 @@ class SecuritySchemaIntegrationTest {
     private Flyway flyway;
 
     @Test
-    void appliesVersionOneAndSeedsEachBaselineRoleExactlyOnce() throws SQLException {
-        assertThat(flyway.info().current().getVersion().getVersion()).isEqualTo("1");
+    void appliesApprovedMigrationsAndSeedsEachBaselineRoleExactlyOnce() throws SQLException {
+        assertThat(flyway.info().current().getVersion().getVersion()).isEqualTo("2");
 
         try (Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(
@@ -58,15 +58,16 @@ class SecuritySchemaIntegrationTest {
     }
 
     @Test
-    void createsOnlyApprovedSecurityTablesAndConstraints() throws SQLException {
+    void createsApprovedSecurityAndCatalogTablesAndConstraints() throws SQLException {
         try (Connection connection = dataSource.getConnection()) {
             assertThat(tableExists(connection, "users")).isTrue();
             assertThat(tableExists(connection, "roles")).isTrue();
             assertThat(tableExists(connection, "user_roles")).isTrue();
             assertThat(tableExists(connection, "security_audit_records")).isTrue();
 
-            assertThat(tableExists(connection, "categories")).isFalse();
-            assertThat(tableExists(connection, "products")).isFalse();
+            assertThat(tableExists(connection, "business_audit_records")).isTrue();
+            assertThat(tableExists(connection, "categories")).isTrue();
+            assertThat(tableExists(connection, "products")).isTrue();
             assertThat(tableExists(connection, "purchase_orders")).isFalse();
             assertThat(tableExists(connection, "sales_orders")).isFalse();
             assertThat(tableExists(connection, "inventory_stock")).isFalse();
@@ -80,6 +81,10 @@ class SecuritySchemaIntegrationTest {
             assertThat(constraintExists(connection, "fk_user_roles_role")).isTrue();
             assertThat(constraintExists(connection, "fk_security_audit_records_actor_user")).isTrue();
             assertThat(constraintExists(connection, "fk_security_audit_records_target_user")).isTrue();
+            assertThat(constraintExists(connection, "ck_categories_code_canonical")).isTrue();
+            assertThat(constraintExists(connection, "ck_categories_name_trimmed")).isTrue();
+            assertThat(constraintExists(connection, "ck_products_sku_canonical")).isTrue();
+            assertThat(constraintExists(connection, "ck_products_unit_of_measure")).isTrue();
 
             assertThat(indexExists(connection, "ux_users_username_normalized")).isTrue();
             assertThat(indexExists(connection, "ix_user_roles_role_id")).isTrue();
@@ -87,6 +92,9 @@ class SecuritySchemaIntegrationTest {
             assertThat(indexExists(connection, "ix_security_audit_records_actor_occurred_at")).isTrue();
             assertThat(indexExists(connection, "ix_security_audit_records_target_occurred_at")).isTrue();
             assertThat(indexExists(connection, "ix_security_audit_records_event_occurred_at")).isTrue();
+            assertThat(indexExists(connection, "ux_categories_code")).isTrue();
+            assertThat(indexExists(connection, "ux_categories_normalized_name")).isTrue();
+            assertThat(indexExists(connection, "ux_products_sku")).isTrue();
         }
     }
 
